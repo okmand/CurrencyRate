@@ -1,6 +1,6 @@
 package and.okm.currency.rate.domain.usecases
 
-import and.okm.currency.rate.data.RatesResponse
+import and.okm.currency.rate.domain.models.RatesResponse
 import and.okm.currency.rate.domain.repositories.RatesRepository
 import retrofit2.Response
 import javax.inject.Inject

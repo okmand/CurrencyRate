@@ -1,7 +1,7 @@
 package and.okm.currency.rate.di
 
-import and.okm.currency.rate.data.ApiService
 import and.okm.currency.rate.constants.HttpRequests
+import and.okm.currency.rate.data.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

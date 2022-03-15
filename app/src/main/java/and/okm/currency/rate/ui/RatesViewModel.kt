@@ -1,7 +1,9 @@
 package and.okm.currency.rate.ui
 
-import and.okm.currency.rate.data.RatesResponse
-import and.okm.currency.rate.domain.repositories.RatesRepository
+import and.okm.currency.rate.domain.models.RatesResponse.Companion.UNSUCCESSFUL
+import and.okm.currency.rate.domain.usecases.RatesUseCase
+import and.okm.currency.rate.ui.formatters.RatesFormatter
+import and.okm.currency.rate.ui.viewobjects.RatesVo
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,16 +14,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RatesViewModel @Inject constructor(
-    private val repository: RatesRepository
+    private val useCase: RatesUseCase,
+    private val formatter: RatesFormatter,
 ) : ViewModel() {
 
-    val rates = MutableLiveData<RatesResponse>()
+    val rates = MutableLiveData<RatesVo>()
+    val progressBarStatus = MutableLiveData<Boolean>()
 
     fun getAllRates() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.getRates()
+            progressBarStatus.postValue(true)
+            val response = useCase.execute()
             if (response.isSuccessful) {
-                rates.postValue(response.body())
+                val ratesVo = formatter.format(response.body() ?: UNSUCCESSFUL)
+                rates.postValue(ratesVo)
+                progressBarStatus.postValue(false)
             }
         }
     }

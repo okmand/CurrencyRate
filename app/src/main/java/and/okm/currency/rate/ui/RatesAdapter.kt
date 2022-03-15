@@ -1,7 +1,8 @@
 package and.okm.currency.rate.ui
 
-import and.okm.currency.rate.data.RatesResponse
 import and.okm.currency.rate.databinding.AdapterRateBinding
+import and.okm.currency.rate.ui.viewobjects.RateVo
+import and.okm.currency.rate.ui.viewobjects.RatesVo
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,10 +12,10 @@ class RatesAdapter @Inject constructor() : RecyclerView.Adapter<MainViewHolder>(
 
     private lateinit var binding: AdapterRateBinding
 
-    var rates = mutableListOf<Pair<String, Double>>()
+    var rates = mutableListOf<RateVo>()
 
-    fun setRates(ratesResponse: RatesResponse) {
-        this.rates = ratesResponse.rates.toList().toMutableList()
+    fun setRates(ratesResponse: RatesVo) {
+        this.rates = ratesResponse.rates.toMutableList()
         notifyDataSetChanged()
     }
 
@@ -26,8 +27,7 @@ class RatesAdapter @Inject constructor() : RecyclerView.Adapter<MainViewHolder>(
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val rate = rates[position]
-        holder.binding.currency.text = rate.first
-        holder.binding.value.text = rate.second.toString()
+        holder.bind(rate)
     }
 
     override fun getItemCount(): Int {
@@ -36,4 +36,10 @@ class RatesAdapter @Inject constructor() : RecyclerView.Adapter<MainViewHolder>(
 }
 
 class MainViewHolder(val binding: AdapterRateBinding) : RecyclerView.ViewHolder(binding.root) {
+
+    fun bind(rate: RateVo) {
+        binding.currency.text = rate.currency
+        binding.value.text = rate.value
+    }
+
 }

@@ -30,11 +30,20 @@ class RatesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.recyclerview.adapter = adapter
+
         viewModel.rates.observe(viewLifecycleOwner) {
             adapter.setRates(it)
         }
+
+        viewModel.progressBarStatus.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.progressDialog.visibility = View.VISIBLE
+            } else {
+                binding.progressDialog.visibility = View.GONE
+            }
+        }
+
         viewModel.getAllRates()
     }
 
