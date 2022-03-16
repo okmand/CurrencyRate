@@ -9,8 +9,13 @@ class RatesUseCase @Inject constructor(
     private val repository: RatesRepository
 ) {
 
-    suspend fun execute(): Response<RatesResponse> {
+    suspend fun getRates(): Response<RatesResponse> {
         return repository.getRates()
+    }
+
+    suspend fun getRatesForSpecificCurrencies(specificCurrencies: List<String>): Response<RatesResponse> {
+        val symbols = specificCurrencies.joinToString(separator = ",")
+        return repository.getRatesForSpecificCurrencies(symbols)
     }
 
 }

@@ -7,4 +7,6 @@ interface RatesRepository {
 
     suspend fun getRates(): Response<RatesResponse>
 
+    suspend fun getRatesForSpecificCurrencies(symbols: String): Response<RatesResponse>
+
 }

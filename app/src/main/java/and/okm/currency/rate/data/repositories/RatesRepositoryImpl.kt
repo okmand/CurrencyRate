@@ -16,4 +16,10 @@ class RatesRepositoryImpl @Inject constructor(
         return mapper.map(apiService.getRates())
     }
 
+    override suspend fun getRatesForSpecificCurrencies(symbols: String): Response<RatesResponse> {
+        return mapper.map(
+            apiService.getRatesForSpecificCurrencies(symbols = symbols)
+        )
+    }
+
 }

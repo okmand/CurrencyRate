@@ -1,4 +1,4 @@
-package and.okm.currency.rate.data
+package and.okm.currency.rate.data.database
 
 import and.okm.currency.rate.data.dto.FavoriteCurrency
 import android.content.Context

@@ -1,7 +1,7 @@
 package and.okm.currency.rate.di
 
-import and.okm.currency.rate.data.AppDatabase
-import and.okm.currency.rate.data.FavoriteCurrencyDao
+import and.okm.currency.rate.data.database.AppDatabase
+import and.okm.currency.rate.data.database.FavoriteCurrencyDao
 import and.okm.currency.rate.data.repositories.FavoriteCurrencyRepository
 import and.okm.currency.rate.domain.mappers.FavoriteCurrenciesMapper
 import and.okm.currency.rate.domain.mappers.RatesMapper

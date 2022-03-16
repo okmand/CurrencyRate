@@ -1,9 +1,10 @@
-package and.okm.currency.rate.presentation
+package and.okm.currency.rate.presentation.screens.home
 
 import and.okm.currency.rate.R
 import and.okm.currency.rate.databinding.AdapterRateBinding
 import and.okm.currency.rate.presentation.viewobjects.RateVo
 import and.okm.currency.rate.presentation.viewobjects.RatesVo
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ class RatesAdapter(
 
     var rates = listOf<RateVo>()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setRates(ratesResponse: RatesVo) {
         this.rates = ratesResponse.rates
         notifyDataSetChanged()
@@ -28,8 +30,8 @@ class RatesAdapter(
         viewHolder.favorite.setOnClickListener {
             if (viewHolder.adapterPosition != RecyclerView.NO_POSITION) {
                 onStarClicked.invoke(rates[viewHolder.adapterPosition].currency)
+                viewHolder.changeStar()
             }
-            viewHolder.changeStar()
         }
         return viewHolder
     }

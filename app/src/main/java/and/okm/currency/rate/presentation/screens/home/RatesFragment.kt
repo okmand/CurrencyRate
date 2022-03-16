@@ -1,4 +1,4 @@
-package and.okm.currency.rate.presentation
+package and.okm.currency.rate.presentation.screens.home
 
 import and.okm.currency.rate.databinding.RatesFragmentBinding
 import android.os.Bundle
@@ -43,20 +43,14 @@ class RatesFragment : Fragment() {
             adapter.setRates(it)
         }
 
-        viewModel.progressBarStatus.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.progressDialog.visibility = View.VISIBLE
-            } else {
-                binding.progressDialog.visibility = View.GONE
-            }
+        viewModel.refreshStatus.observe(viewLifecycleOwner) {
+            binding.swipeRefresh.isRefreshing = it
+        }
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.getAllRates()
         }
 
         viewModel.getAllRates()
-    }
-
-
-    companion object {
-        fun newInstance() = RatesFragment()
     }
 
 }

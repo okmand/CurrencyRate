@@ -1,4 +1,4 @@
-package and.okm.currency.rate.presentation
+package and.okm.currency.rate.presentation.screens.home
 
 import and.okm.currency.rate.data.dto.FavoriteCurrency
 import and.okm.currency.rate.domain.models.RatesResponse.Companion.UNSUCCESSFUL
@@ -22,20 +22,20 @@ class RatesViewModel @Inject constructor(
 ) : ViewModel() {
 
     val rates = MutableLiveData<RatesVo>()
-    val progressBarStatus = MutableLiveData<Boolean>()
+    val refreshStatus = MutableLiveData<Boolean>()
 
     fun getAllRates() {
         CoroutineScope(Dispatchers.IO).launch {
-            progressBarStatus.postValue(true)
-            val response = ratesUseCase.execute()
-            val allFavoriteCurrencies = favoriteCurrencyUseCase.getAllFavoriteCurrencies()
-            if (response.isSuccessful) {
+            refreshStatus.postValue(true)
+            val ratesResponse = ratesUseCase.getRates()
+            if (ratesResponse.isSuccessful) {
+                val allFavoriteCurrencies = favoriteCurrencyUseCase.getAllFavoriteCurrencies()
                 val ratesVo = formatter.format(
-                    ratesResponse = response.body() ?: UNSUCCESSFUL,
+                    ratesResponse = ratesResponse.body() ?: UNSUCCESSFUL,
                     favoriteCurrencies = allFavoriteCurrencies
                 )
                 rates.postValue(ratesVo)
-                progressBarStatus.postValue(false)
+                refreshStatus.postValue(false)
             }
         }
     }

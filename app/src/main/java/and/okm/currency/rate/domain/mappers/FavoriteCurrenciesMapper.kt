@@ -4,10 +4,10 @@ import and.okm.currency.rate.data.dto.FavoriteCurrency
 
 class FavoriteCurrenciesMapper {
 
-    fun map(favoriteCurrencies: List<FavoriteCurrency>): Set<String> {
+    fun map(favoriteCurrencies: List<FavoriteCurrency>): List<String> {
         return favoriteCurrencies.map {
             it.currency
-        }.toSet()
+        }
     }
 
 }

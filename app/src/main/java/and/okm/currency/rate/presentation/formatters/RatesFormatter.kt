@@ -6,7 +6,7 @@ import and.okm.currency.rate.presentation.viewobjects.RatesVo
 
 class RatesFormatter {
 
-    fun format(ratesResponse: RatesResponse, favoriteCurrencies: Set<String>): RatesVo {
+    fun format(ratesResponse: RatesResponse, favoriteCurrencies: List<String>): RatesVo {
         val listRates = ratesResponse.rates
             .toList()
             .map { currencyWithValue ->
@@ -17,6 +17,22 @@ class RatesFormatter {
                     currency = currency,
                     value = value,
                     favorite = isFavorite,
+                )
+            }
+
+        return RatesVo(
+            rates = listRates
+        )
+    }
+
+    fun formatFavorites(ratesResponse: RatesResponse): RatesVo {
+        val listRates = ratesResponse.rates
+            .toList()
+            .map { currencyWithValue ->
+                RateVo(
+                    currency = currencyWithValue.first,
+                    value = currencyWithValue.second.toString(),
+                    favorite = true,
                 )
             }
 

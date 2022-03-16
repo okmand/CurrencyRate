@@ -8,12 +8,16 @@ class FavoriteCurrencyUseCase @Inject constructor(
     private val favoriteCurrencyRepository: FavoriteCurrencyRepository,
 ) {
 
-    suspend fun getAllFavoriteCurrencies(): Set<String> {
+    suspend fun getAllFavoriteCurrencies(): List<String> {
         return favoriteCurrencyRepository.getAllFavoriteCurrencies()
     }
 
     suspend fun getByCurrency(currency: String): List<FavoriteCurrency> {
         return favoriteCurrencyRepository.getByCurrency(currency)
+    }
+
+    suspend fun getCountFavoriteCurrencies(): Int {
+        return favoriteCurrencyRepository.getCountFavoriteCurrencies()
     }
 
     suspend fun insert(currency: FavoriteCurrency) {
