@@ -1,4 +1,4 @@
-package and.okm.currency.rate.constants
+package and.okm.currency.rate.data.constants
 
 class HttpRequests {
     companion object {

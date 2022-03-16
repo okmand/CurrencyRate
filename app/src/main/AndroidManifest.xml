@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="and.okm.currency.rate">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".di.HiltApplication"
         android:allowBackup="true"
@@ -12,7 +15,7 @@
         android:theme="@style/Theme.CurrencyRate"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,8 +24,5 @@
             </intent-filter>
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

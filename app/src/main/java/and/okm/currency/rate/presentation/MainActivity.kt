@@ -1,4 +1,4 @@
-package and.okm.currency.rate.ui
+package and.okm.currency.rate.presentation
 
 import and.okm.currency.rate.R
 import and.okm.currency.rate.databinding.ActivityMainBinding

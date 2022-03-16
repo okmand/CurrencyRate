@@ -12,6 +12,6 @@ import dagger.hilt.android.components.ViewModelComponent
 interface RepositoriesModule {
 
     @Binds
-    fun ratesRepository(mainRepositoryImpl: RatesRepositoryImpl): RatesRepository
+    fun ratesRepository(ratesRepositoryImpl: RatesRepositoryImpl): RatesRepository
 
 }

@@ -1,4 +1,4 @@
-package and.okm.currency.rate.ui
+package and.okm.currency.rate.presentation
 
 import and.okm.currency.rate.databinding.RatesFragmentBinding
 import android.os.Bundle
@@ -8,13 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class RatesFragment : Fragment() {
 
-    @Inject
-    lateinit var adapter: RatesAdapter
+    private lateinit var adapter: RatesAdapter
 
     private val viewModel by viewModels<RatesViewModel>()
 
@@ -30,6 +28,15 @@ class RatesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val onStarClicked: (currency: String) -> Unit = { currency ->
+            viewModel.changeFavoriteCurrencies(currency)
+        }
+
+        adapter = RatesAdapter(
+            onStarClicked = onStarClicked
+        )
+
         binding.recyclerview.adapter = adapter
 
         viewModel.rates.observe(viewLifecycleOwner) {

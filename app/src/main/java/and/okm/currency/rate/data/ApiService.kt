@@ -1,7 +1,7 @@
 package and.okm.currency.rate.data
 
-import and.okm.currency.rate.constants.HttpRequests.Companion.FIELD_ACCESS_KEY
-import and.okm.currency.rate.constants.Tokens.Companion.TOKEN
+import and.okm.currency.rate.data.constants.HttpRequests.Companion.FIELD_ACCESS_KEY
+import and.okm.currency.rate.data.constants.Tokens.Companion.TOKEN
 import and.okm.currency.rate.data.dto.RatesResponseDto
 import retrofit2.Response
 import retrofit2.http.GET
