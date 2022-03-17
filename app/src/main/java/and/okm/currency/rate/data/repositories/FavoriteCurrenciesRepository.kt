@@ -1,33 +1,33 @@
 package and.okm.currency.rate.data.repositories
 
-import and.okm.currency.rate.data.database.FavoriteCurrencyDao
+import and.okm.currency.rate.data.database.FavoriteCurrenciesDao
 import and.okm.currency.rate.data.dto.FavoriteCurrency
 import and.okm.currency.rate.domain.mappers.FavoriteCurrenciesMapper
 import javax.inject.Inject
 
-class FavoriteCurrencyRepository @Inject constructor(
-    private val favoriteCurrencyDao: FavoriteCurrencyDao,
+class FavoriteCurrenciesRepository @Inject constructor(
+    private val dao: FavoriteCurrenciesDao,
     private val mapper: FavoriteCurrenciesMapper,
 ) {
 
     suspend fun getAllFavoriteCurrencies(): List<String> {
-        return mapper.map(favoriteCurrencyDao.getAllFavoriteCurrencies())
+        return mapper.map(dao.getAllFavoriteCurrencies())
     }
 
     suspend fun getByCurrency(currency: String): List<FavoriteCurrency> {
-        return favoriteCurrencyDao.getByCurrency(currency)
+        return dao.getByCurrency(currency)
     }
 
     suspend fun getCountFavoriteCurrencies(): Int {
-        return favoriteCurrencyDao.getCountFavoriteCurrencies()
+        return dao.getCountFavoriteCurrencies()
     }
 
     suspend fun insert(currency: FavoriteCurrency) {
-        favoriteCurrencyDao.insert(currency)
+        dao.insert(currency)
     }
 
     suspend fun delete(currency: FavoriteCurrency) {
-        favoriteCurrencyDao.delete(currency)
+        dao.delete(currency)
     }
 
 }

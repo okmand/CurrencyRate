@@ -59,7 +59,7 @@ class FavoritesCurrenciesViewHolder(
 
     fun bind(rate: RateVo) {
         currency.text = rate.currency
-        value.text = rate.value
+        value.text = rate.value.toString()
     }
 
 }

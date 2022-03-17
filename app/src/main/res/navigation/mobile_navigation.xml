@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/navigation_favorites"
         android:name="and.okm.currency.rate.presentation.screens.favorites.FavoritesFragment"
-        android:label="@string/title_favorites"
+        android:label="@string/title_favorite_currencies"
         tools:layout="@layout/rates_fragment" />
 
 </navigation>

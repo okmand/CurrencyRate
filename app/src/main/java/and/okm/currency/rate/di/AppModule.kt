@@ -1,10 +1,14 @@
 package and.okm.currency.rate.di
 
-import and.okm.currency.rate.data.database.AppDatabase
-import and.okm.currency.rate.data.database.FavoriteCurrencyDao
-import and.okm.currency.rate.data.repositories.FavoriteCurrencyRepository
+import and.okm.currency.rate.data.database.FavoriteCurrenciesDao
+import and.okm.currency.rate.data.database.FavoriteCurrenciesDatabase
+import and.okm.currency.rate.data.database.SettingsDao
+import and.okm.currency.rate.data.database.SettingsDatabase
+import and.okm.currency.rate.data.repositories.FavoriteCurrenciesRepository
+import and.okm.currency.rate.data.repositories.SettingsRepository
 import and.okm.currency.rate.domain.mappers.FavoriteCurrenciesMapper
 import and.okm.currency.rate.domain.mappers.RatesMapper
+import and.okm.currency.rate.domain.mappers.SettingsMapper
 import and.okm.currency.rate.presentation.formatters.RatesFormatter
 import android.content.Context
 import dagger.Module
@@ -27,25 +31,52 @@ class AppModule {
     @Provides
     fun provideFavoriteCurrenciesMapper() = FavoriteCurrenciesMapper()
 
+    @Provides
+    fun provideSettingsMapper() = SettingsMapper()
+
     @Singleton
     @Provides
-    fun provideDatabase(@ApplicationContext appContext: Context): AppDatabase {
-        return AppDatabase.getDatabase(appContext)
+    fun provideFavoriteCurrenciesDatabase(
+        @ApplicationContext appContext: Context
+    ): FavoriteCurrenciesDatabase {
+        return FavoriteCurrenciesDatabase.getDatabase(appContext)
     }
 
     @Singleton
     @Provides
-    fun provideCharacterDao(db: AppDatabase): FavoriteCurrencyDao {
-        return db.favoriteCurrencyDao()
+    fun provideFavoriteCurrenciesDao(db: FavoriteCurrenciesDatabase): FavoriteCurrenciesDao {
+        return db.favoriteCurrenciesDao()
     }
 
     @Singleton
     @Provides
     fun favoriteCurrencyRepository(
-        favoriteCurrencyDao: FavoriteCurrencyDao,
+        favoriteCurrenciesDao: FavoriteCurrenciesDao,
         favoriteCurrenciesMapper: FavoriteCurrenciesMapper,
-    ): FavoriteCurrencyRepository {
-        return FavoriteCurrencyRepository(favoriteCurrencyDao, favoriteCurrenciesMapper)
+    ): FavoriteCurrenciesRepository {
+        return FavoriteCurrenciesRepository(favoriteCurrenciesDao, favoriteCurrenciesMapper)
     }
 
+    @Singleton
+    @Provides
+    fun provideSettingsDatabase(
+        @ApplicationContext appContext: Context
+    ): SettingsDatabase {
+        return SettingsDatabase.getDatabase(appContext)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSettingsDao(db: SettingsDatabase): SettingsDao {
+        return db.settingsDao()
+    }
+
+    @Singleton
+    @Provides
+    fun settingsRepository(
+        settingsDao: SettingsDao,
+        settingsMapper: SettingsMapper,
+    ): SettingsRepository {
+        return SettingsRepository(settingsDao, settingsMapper)
+    }
 }

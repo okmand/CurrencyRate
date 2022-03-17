@@ -58,7 +58,7 @@ class RateViewHolder(
 
     fun bind(rate: RateVo) {
         currency.text = rate.currency
-        value.text = rate.value
+        value.text = rate.value.toString()
         isFavorite = !rate.favorite
         changeStar()
     }

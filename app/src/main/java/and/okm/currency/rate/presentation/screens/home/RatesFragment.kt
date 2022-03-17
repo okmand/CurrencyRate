@@ -49,7 +49,10 @@ class RatesFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.getAllRates()
         }
+    }
 
+    override fun onStart() {
+        super.onStart()
         viewModel.getAllRates()
     }
 

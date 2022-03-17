@@ -4,7 +4,7 @@ import and.okm.currency.rate.data.dto.FavoriteCurrency
 import androidx.room.*
 
 @Dao
-interface FavoriteCurrencyDao {
+interface FavoriteCurrenciesDao {
 
     @Query("SELECT * FROM favorite_currencies")
     suspend fun getAllFavoriteCurrencies(): List<FavoriteCurrency>

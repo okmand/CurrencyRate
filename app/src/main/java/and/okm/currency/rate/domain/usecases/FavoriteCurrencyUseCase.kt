@@ -1,31 +1,31 @@
 package and.okm.currency.rate.domain.usecases
 
 import and.okm.currency.rate.data.dto.FavoriteCurrency
-import and.okm.currency.rate.data.repositories.FavoriteCurrencyRepository
+import and.okm.currency.rate.data.repositories.FavoriteCurrenciesRepository
 import javax.inject.Inject
 
 class FavoriteCurrencyUseCase @Inject constructor(
-    private val favoriteCurrencyRepository: FavoriteCurrencyRepository,
+    private val repository: FavoriteCurrenciesRepository,
 ) {
 
     suspend fun getAllFavoriteCurrencies(): List<String> {
-        return favoriteCurrencyRepository.getAllFavoriteCurrencies()
+        return repository.getAllFavoriteCurrencies()
     }
 
     suspend fun getByCurrency(currency: String): List<FavoriteCurrency> {
-        return favoriteCurrencyRepository.getByCurrency(currency)
+        return repository.getByCurrency(currency)
     }
 
     suspend fun getCountFavoriteCurrencies(): Int {
-        return favoriteCurrencyRepository.getCountFavoriteCurrencies()
+        return repository.getCountFavoriteCurrencies()
     }
 
     suspend fun insert(currency: FavoriteCurrency) {
-        favoriteCurrencyRepository.insert(currency)
+        repository.insert(currency)
     }
 
     suspend fun delete(currency: FavoriteCurrency) {
-        favoriteCurrencyRepository.delete(currency)
+        repository.delete(currency)
     }
 
 

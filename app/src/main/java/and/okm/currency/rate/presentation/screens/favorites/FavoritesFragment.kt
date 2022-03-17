@@ -56,9 +56,11 @@ class FavoritesFragment : Fragment() {
             binding.hintText.text = context?.resources?.getString(R.string.text_hint) ?: ""
             binding.hintText.isVisible = it
         }
-
-        viewModel.getAllFavoriteCurrenciesRates()
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.getAllFavoriteCurrenciesRates()
+    }
 
 }

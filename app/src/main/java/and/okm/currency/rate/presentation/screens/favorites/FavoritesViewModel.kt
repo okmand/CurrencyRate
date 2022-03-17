@@ -3,6 +3,8 @@ package and.okm.currency.rate.presentation.screens.favorites
 import and.okm.currency.rate.domain.models.RatesResponse
 import and.okm.currency.rate.domain.usecases.FavoriteCurrencyUseCase
 import and.okm.currency.rate.domain.usecases.RatesUseCase
+import and.okm.currency.rate.domain.usecases.SettingUseCase
+import and.okm.currency.rate.presentation.constants.Settings
 import and.okm.currency.rate.presentation.formatters.RatesFormatter
 import and.okm.currency.rate.presentation.viewobjects.RatesVo
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +19,7 @@ import javax.inject.Inject
 class FavoritesViewModel @Inject constructor(
     private val ratesUseCase: RatesUseCase,
     private val favoriteCurrencyUseCase: FavoriteCurrencyUseCase,
+    private val settingsUseCase: SettingUseCase,
     private val formatter: RatesFormatter,
 ) : ViewModel() {
 
@@ -30,13 +33,18 @@ class FavoritesViewModel @Inject constructor(
             textHint.postValue(false)
             val allFavoriteCurrencies = favoriteCurrencyUseCase.getAllFavoriteCurrencies()
             var ratesVo = RatesVo()
+            val settings = settingsUseCase.getSettings()
+            val isAlphabetSetting = getSetting(Settings.ALPHABET_SORTING_VALUE, settings)
+            val isAscendingOrder = getSetting(Settings.ASCENDING_ORDER_VALUE, settings)
             if (allFavoriteCurrencies.isNotEmpty()) {
                 val responseRates = ratesUseCase.getRatesForSpecificCurrencies(
                     specificCurrencies = allFavoriteCurrencies
                 )
                 if (responseRates.isSuccessful) {
                     ratesVo = formatter.formatFavorites(
-                        ratesResponse = responseRates.body() ?: RatesResponse.UNSUCCESSFUL
+                        ratesResponse = responseRates.body() ?: RatesResponse.UNSUCCESSFUL,
+                        isAlphabetSorting = isAlphabetSetting,
+                        isAscendingOrder = isAscendingOrder,
                     )
                 }
             } else {
@@ -45,6 +53,11 @@ class FavoritesViewModel @Inject constructor(
             rates.postValue(ratesVo)
             refreshStatus.postValue(false)
         }
+    }
+
+    private fun getSetting(parameter: String, settings: Map<String, Boolean>): Boolean {
+        val value = settings[parameter]
+        return value == null || value
     }
 
     fun changeFavoriteCurrencies(currency: String) {

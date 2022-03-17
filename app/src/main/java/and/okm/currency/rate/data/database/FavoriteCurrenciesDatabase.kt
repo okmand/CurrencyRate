@@ -7,16 +7,16 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(entities = [FavoriteCurrency::class], version = 1, exportSchema = false)
-abstract class AppDatabase : RoomDatabase() {
+abstract class FavoriteCurrenciesDatabase : RoomDatabase() {
 
-    abstract fun favoriteCurrencyDao(): FavoriteCurrencyDao
+    abstract fun favoriteCurrenciesDao(): FavoriteCurrenciesDao
 
     companion object {
 
         @Volatile
-        private var instance: AppDatabase? = null
+        private var instance: FavoriteCurrenciesDatabase? = null
 
-        fun getDatabase(context: Context): AppDatabase =
+        fun getDatabase(context: Context): FavoriteCurrenciesDatabase =
             instance ?: synchronized(this) {
                 instance ?: buildDatabase(context).also {
                     instance = it
@@ -24,7 +24,11 @@ abstract class AppDatabase : RoomDatabase() {
             }
 
         private fun buildDatabase(appContext: Context) =
-            Room.databaseBuilder(appContext, AppDatabase::class.java, "favorite_currencies")
+            Room.databaseBuilder(
+                appContext,
+                FavoriteCurrenciesDatabase::class.java,
+                "favorite_currencies"
+            )
                 .fallbackToDestructiveMigration()
                 .build()
 
