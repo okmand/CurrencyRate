@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class FavoritesCurrenciesAdapter(
-    private val onStarClicked: (currency: String) -> Unit
+    private val onDeleteClicked: (currency: String) -> Unit
 ) : RecyclerView.Adapter<FavoritesCurrenciesViewHolder>() {
 
     private lateinit var binding: AdapterFavoriteCurrienceBinding
@@ -31,7 +31,7 @@ class FavoritesCurrenciesAdapter(
         val viewHolder = FavoritesCurrenciesViewHolder(binding)
         viewHolder.delete.setOnClickListener {
             if (viewHolder.adapterPosition != RecyclerView.NO_POSITION) {
-                onStarClicked.invoke(rates[viewHolder.adapterPosition].currency)
+                onDeleteClicked.invoke(rates[viewHolder.adapterPosition].currency)
                 rates.removeAt(viewHolder.adapterPosition)
                 notifyItemRemoved(viewHolder.adapterPosition)
             }

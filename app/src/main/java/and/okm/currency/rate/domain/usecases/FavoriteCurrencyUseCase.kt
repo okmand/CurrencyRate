@@ -1,7 +1,7 @@
 package and.okm.currency.rate.domain.usecases
 
 import and.okm.currency.rate.data.dto.FavoriteCurrency
-import and.okm.currency.rate.data.repositories.FavoriteCurrenciesRepository
+import and.okm.currency.rate.domain.repositories.FavoriteCurrenciesRepository
 import javax.inject.Inject
 
 class FavoriteCurrencyUseCase @Inject constructor(
@@ -28,5 +28,8 @@ class FavoriteCurrencyUseCase @Inject constructor(
         repository.delete(currency)
     }
 
+    suspend fun deleteAllFavoriteCurrencies() {
+        repository.deleteAllFavoriteCurrencies()
+    }
 
 }

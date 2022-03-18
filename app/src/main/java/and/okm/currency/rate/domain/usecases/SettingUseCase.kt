@@ -1,7 +1,7 @@
 package and.okm.currency.rate.domain.usecases
 
 import and.okm.currency.rate.data.dto.Setting
-import and.okm.currency.rate.data.repositories.SettingsRepository
+import and.okm.currency.rate.domain.repositories.SettingsRepository
 import javax.inject.Inject
 
 class SettingUseCase @Inject constructor(

@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SettingsFragment : Fragment() {
@@ -27,14 +30,18 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.alphabeticalSorting.observe(viewLifecycleOwner) {
-            binding.alphabeticalSorting.isChecked = it
-            binding.valueSorting.isChecked = !it
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.alphabeticalSorting.collect {
+                binding.alphabeticalSorting.isChecked = it
+                binding.valueSorting.isChecked = !it
+            }
         }
 
-        viewModel.ascendingOrder.observe(viewLifecycleOwner) {
-            binding.ascendingOrder.isChecked = it
-            binding.descendingOrder.isChecked = !it
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.ascendingOrder.collect {
+                binding.ascendingOrder.isChecked = it
+                binding.descendingOrder.isChecked = !it
+            }
         }
 
         binding.alphabeticalSorting.setOnCheckedChangeListener { _, value ->

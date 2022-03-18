@@ -1,13 +1,17 @@
 package and.okm.currency.rate.presentation.screens.home
 
 import and.okm.currency.rate.databinding.RatesFragmentBinding
+import and.okm.currency.rate.utils.ErrorHandler
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RatesFragment : Fragment() {
@@ -39,15 +43,29 @@ class RatesFragment : Fragment() {
 
         binding.recyclerview.adapter = adapter
 
-        viewModel.rates.observe(viewLifecycleOwner) {
-            adapter.setRates(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.rates.collect {
+                adapter.setRates(it)
+            }
         }
 
-        viewModel.refreshStatus.observe(viewLifecycleOwner) {
-            binding.swipeRefresh.isRefreshing = it
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.refreshStatus.collect {
+                binding.swipeRefresh.isRefreshing = it
+            }
         }
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.getAllRates()
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.error.collect {
+                ErrorHandler.showAlertDialog(
+                    context = requireContext(),
+                    message = it,
+                    onPositiveButtonClicked = { viewModel.getAllRates() }
+                )
+            }
         }
     }
 

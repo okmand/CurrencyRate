@@ -1,17 +1,19 @@
 package and.okm.currency.rate.presentation.screens.favorites
 
 import and.okm.currency.rate.domain.models.RatesResponse
+import and.okm.currency.rate.domain.models.Result
 import and.okm.currency.rate.domain.usecases.FavoriteCurrencyUseCase
 import and.okm.currency.rate.domain.usecases.RatesUseCase
 import and.okm.currency.rate.domain.usecases.SettingUseCase
 import and.okm.currency.rate.presentation.constants.Settings
 import and.okm.currency.rate.presentation.formatters.RatesFormatter
 import and.okm.currency.rate.presentation.viewobjects.RatesVo
-import androidx.lifecycle.MutableLiveData
+import and.okm.currency.rate.utils.ErrorHandler
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,36 +25,59 @@ class FavoritesViewModel @Inject constructor(
     private val formatter: RatesFormatter,
 ) : ViewModel() {
 
-    val rates = MutableLiveData<RatesVo>()
-    val refreshStatus = MutableLiveData<Boolean>()
-    val textHint = MutableLiveData<Boolean>()
+    val rates: StateFlow<RatesVo>
+        get() = ratesOrderStateFlow
+    private val ratesOrderStateFlow = MutableStateFlow(RatesVo())
+
+    val refreshStatus: StateFlow<Boolean>
+        get() = refreshStatusOrderStateFlow
+    private val refreshStatusOrderStateFlow = MutableStateFlow(false)
+
+    val contentIsEmpty: StateFlow<Boolean>
+        get() = contentIsEmptyStatusOrderStateFlow
+    private val contentIsEmptyStatusOrderStateFlow = MutableStateFlow(true)
+
+    val error: SharedFlow<String>
+        get() = errorSharedFlow.asSharedFlow()
+    private val errorSharedFlow = MutableSharedFlow<String>()
 
     fun getAllFavoriteCurrenciesRates() {
         CoroutineScope(Dispatchers.IO).launch {
-            refreshStatus.postValue(true)
-            textHint.postValue(false)
+            refreshStatusOrderStateFlow.emit(true)
+            contentIsEmptyStatusOrderStateFlow.emit(true)
             val allFavoriteCurrencies = favoriteCurrencyUseCase.getAllFavoriteCurrencies()
-            var ratesVo = RatesVo()
-            val settings = settingsUseCase.getSettings()
-            val isAlphabetSetting = getSetting(Settings.ALPHABET_SORTING_VALUE, settings)
-            val isAscendingOrder = getSetting(Settings.ASCENDING_ORDER_VALUE, settings)
             if (allFavoriteCurrencies.isNotEmpty()) {
-                val responseRates = ratesUseCase.getRatesForSpecificCurrencies(
+                val ratesResponse = ratesUseCase.getRatesForSpecificCurrencies(
                     specificCurrencies = allFavoriteCurrencies
                 )
-                if (responseRates.isSuccessful) {
-                    ratesVo = formatter.formatFavorites(
-                        ratesResponse = responseRates.body() ?: RatesResponse.UNSUCCESSFUL,
-                        isAlphabetSorting = isAlphabetSetting,
-                        isAscendingOrder = isAscendingOrder,
-                    )
+                when (ratesResponse) {
+                    is Result.Success -> handleSuccess(ratesResponse.value)
+                    is Result.Failure -> handleError(ratesResponse.cause)
                 }
             } else {
-                textHint.postValue(true)
+                ratesOrderStateFlow.emit(RatesVo())
+                contentIsEmptyStatusOrderStateFlow.emit(false)
+                refreshStatusOrderStateFlow.emit(false)
             }
-            rates.postValue(ratesVo)
-            refreshStatus.postValue(false)
         }
+    }
+
+    private suspend fun handleSuccess(ratesResponse: RatesResponse) {
+        val settings = settingsUseCase.getSettings()
+        val isAlphabetSetting = getSetting(Settings.ALPHABET_SORTING_VALUE, settings)
+        val isAscendingOrder = getSetting(Settings.ASCENDING_ORDER_VALUE, settings)
+        val ratesVo = formatter.formatFavorites(
+            ratesResponse = ratesResponse,
+            isAlphabetSorting = isAlphabetSetting,
+            isAscendingOrder = isAscendingOrder,
+        )
+        ratesOrderStateFlow.emit(ratesVo)
+        refreshStatusOrderStateFlow.emit(false)
+    }
+
+    private suspend fun handleError(cause: Throwable) {
+        val message = ErrorHandler.getMessageByThrowable(cause)
+        errorSharedFlow.emit(message)
     }
 
     private fun getSetting(parameter: String, settings: Map<String, Boolean>): Boolean {
@@ -69,7 +94,15 @@ class FavoritesViewModel @Inject constructor(
                 }
             }
             val countFavoriteCurrencies = favoriteCurrencyUseCase.getCountFavoriteCurrencies()
-            textHint.postValue(countFavoriteCurrencies == 0)
+            contentIsEmptyStatusOrderStateFlow.emit(countFavoriteCurrencies != 0)
+            getAllFavoriteCurrenciesRates()
+        }
+    }
+
+    fun deleteAllFavoriteCurrencies() {
+        CoroutineScope(Dispatchers.IO).launch {
+            favoriteCurrencyUseCase.deleteAllFavoriteCurrencies()
+            getAllFavoriteCurrenciesRates()
         }
     }
 

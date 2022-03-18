@@ -21,4 +21,7 @@ interface FavoriteCurrenciesDao {
     @Delete
     suspend fun delete(currency: FavoriteCurrency)
 
+    @Query("DELETE FROM favorite_currencies")
+    suspend fun deleteAllFavoriteCurrencies()
+
 }

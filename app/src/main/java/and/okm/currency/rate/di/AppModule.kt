@@ -4,8 +4,6 @@ import and.okm.currency.rate.data.database.FavoriteCurrenciesDao
 import and.okm.currency.rate.data.database.FavoriteCurrenciesDatabase
 import and.okm.currency.rate.data.database.SettingsDao
 import and.okm.currency.rate.data.database.SettingsDatabase
-import and.okm.currency.rate.data.repositories.FavoriteCurrenciesRepository
-import and.okm.currency.rate.data.repositories.SettingsRepository
 import and.okm.currency.rate.domain.mappers.FavoriteCurrenciesMapper
 import and.okm.currency.rate.domain.mappers.RatesMapper
 import and.okm.currency.rate.domain.mappers.SettingsMapper
@@ -50,15 +48,6 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun favoriteCurrencyRepository(
-        favoriteCurrenciesDao: FavoriteCurrenciesDao,
-        favoriteCurrenciesMapper: FavoriteCurrenciesMapper,
-    ): FavoriteCurrenciesRepository {
-        return FavoriteCurrenciesRepository(favoriteCurrenciesDao, favoriteCurrenciesMapper)
-    }
-
-    @Singleton
-    @Provides
     fun provideSettingsDatabase(
         @ApplicationContext appContext: Context
     ): SettingsDatabase {
@@ -71,12 +60,4 @@ class AppModule {
         return db.settingsDao()
     }
 
-    @Singleton
-    @Provides
-    fun settingsRepository(
-        settingsDao: SettingsDao,
-        settingsMapper: SettingsMapper,
-    ): SettingsRepository {
-        return SettingsRepository(settingsDao, settingsMapper)
-    }
 }
